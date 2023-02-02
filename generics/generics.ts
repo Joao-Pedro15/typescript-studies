@@ -5,6 +5,11 @@ class UserModel {
   name?: string
 }
 
+class MessageModel {
+  userId: string
+  message: string
+}
+
 class BaseRepository<T> {
   readonly collection: Collection
   constructor(db: Db, collectionName: string) {
@@ -23,6 +28,8 @@ class BaseRepository<T> {
 }
 
 class UserRepository extends BaseRepository<UserModel> {}
+
+class MessageRepository extends BaseRepository<MessageModel> {}
 
 class LoginController {
   async login() {
