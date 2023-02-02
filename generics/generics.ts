@@ -1,29 +1,28 @@
-import { Db, MongoClient } from 'mongodb'
+import { Db, MongoClient, Collection } from 'mongodb'
 
 class UserModel {
   _id: string
   name?: string
 }
 
-class UserRepository {
-  
-  constructor(
-    private readonly db: Db,
-    private readonly collectionName: string
-  ){}
-  
-  async loadById(id: any): Promise<any> {
-    const collection = this.db.collection(this.collectionName)
-    const user = await collection.findOne({ _id: id })
-    return user
+class BaseRepository<T> {
+  readonly collection: Collection
+  constructor(db: Db, collectionName: string) {
+    this.collection = db.collection(collectionName)
   }
 
-  async loadAll(): Promise<any[]> {
-    const collection = this.db.collection(this.collectionName)
-    const user = await collection.find().toArray()
-    return user
+  async loadById(id: string): Promise<T> {
+    const entity = await this.collection.findOne({_id: id })
+    return entity
+  }
+
+  async loadAll(): Promise<T[]> {
+    const list = await this.collection.find().toArray()
+    return list
   }
 }
+
+class UserRepository extends BaseRepository<UserModel> {}
 
 class LoginController {
   async login() {
