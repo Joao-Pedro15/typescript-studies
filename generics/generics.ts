@@ -29,7 +29,12 @@ class BaseRepository<T> {
 
 class UserRepository extends BaseRepository<UserModel> {}
 
-class MessageRepository extends BaseRepository<MessageModel> {}
+class MessageRepository extends BaseRepository<MessageModel> {
+  async getByUser(id: string) {
+    const user = await this.collection.findOne({ _id: id })
+    return user
+  }
+}
 
 class LoginController {
   async login() {
